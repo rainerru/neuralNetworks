@@ -45,13 +45,14 @@ public class NeuralNetwork {
 	 */
 	public boolean init(
 		List<List<Double>> trainingData, List<Integer> trainingDataSolution,
-		int[] numberOfNodes,
+		int[] numberOfNodes, int numberOfEpochs,
 		double learningRate, List<Function<Double, Double>> activation
  	)
 	{
 		this.trainingData = trainingData;
 		this.trainingDataSolution = trainingDataSolution;
 		this.numberOfNodes = numberOfNodes;
+		this.numberOfEpochs = numberOfEpochs;
 		this.learningRate = learningRate;
 		this.activation = activation;
 		this.weights = new ArrayList<Matrix>();
@@ -61,7 +62,7 @@ public class NeuralNetwork {
 
 		for ( int i = 0; i < this.numberOfNodes.length - 1; i++ )
 		{
-			this.weights.add( new Matrix( numberOfNodes[i], numberOfNodes[i+1] ) );
+			this.weights.add( new Matrix( numberOfNodes[i+1], numberOfNodes[i] ) );
 			fillWithRandomValues( this.weights.get(i) , 0 , Math.pow(numberOfNodes[i], -0.5) );
 		}
 
@@ -132,16 +133,16 @@ public class NeuralNetwork {
 		List<Matrix> errors = backPropagate( outputs, targets );
 
 		Matrix current;
-
-		for ( int layer = 1; layer < numberOfNodes.length; layer++ )
+		
+		for ( int layer = 0; layer < numberOfNodes.length - 1; layer++ )
 		{
 			current = this.weights.get( layer );
-			current = current.matrixAddition( errors.get( layer )
-						.multByElement( outputs.get( layer ) )
-						.multByElement( outputs.get( layer )
+			this.weights.set( layer, current.matrixAddition( errors.get( layer + 1 )
+						.multByElement( outputs.get( layer + 1 ) )
+						.multByElement( outputs.get( layer + 1  )
 						.applyFuntion( activation.get( layer ) ) )
-						.matrixMultiplication( outputs.get( layer - 1 ).transposeMatrix())
-						.scalarMultiplication( learningRate ));
+						.matrixMultiplication( outputs.get( layer ).transposeMatrix())
+						.scalarMultiplication( learningRate ))   );
 		}
 	}
 
@@ -157,7 +158,7 @@ public class NeuralNetwork {
 		Matrix current = inputs;
 		List<Matrix> outputs = new ArrayList<Matrix>();
 		outputs.add(inputs);
-		for ( int layer = 0; layer < numberOfNodes.length; layer++ )
+		for ( int layer = 0; layer < numberOfNodes.length - 1; layer++ )
 		{
 			current = weights.get( layer ).matrixMultiplication( current );
 			current = current.applyFuntion( activation.get( layer ) );
@@ -180,9 +181,9 @@ public class NeuralNetwork {
 		List<Matrix> errors = new ArrayList<Matrix>();
 		Matrix current = targets.matrixSubstraction( outputs.get( numberOfNodes.length-1 ) );
 		errors.add( current );
-		for ( int layer = numberOfNodes.length - 2; layer >= 0; layer++ )
+		for ( int layer = numberOfNodes.length - 2; layer >= 0; layer-- )
 		{
-			current = weights.get( layer ).matrixMultiplication( current );
+			current = weights.get( layer ).transposeMatrix().matrixMultiplication( current );
 			errors.add( current );
 		}
 		Collections.reverse( errors );

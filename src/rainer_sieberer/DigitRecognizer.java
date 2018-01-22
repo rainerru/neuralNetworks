@@ -55,7 +55,8 @@ public class DigitRecognizer {
 			int[] numberOfNodes = new int[]{784,200,10};
 			List<Function<Double, Double>> activation = new ArrayList<Function<Double, Double>>();
 			activation.add( (Double x) -> 1.0 / (1.0 + Math.exp(-x)) );
-			return net.init( trainingData, trainingDataSolution, numberOfNodes, 0.1, activation );
+			activation.add( (Double x) -> 1.0 / (1.0 + Math.exp(-x)) );
+			return net.init( trainingData, trainingDataSolution, numberOfNodes, 5, 0.1, activation );
 		} else
 			return false;
 	}

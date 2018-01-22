@@ -87,7 +87,7 @@ public class Matrix {
 
 	public Matrix matrixAddition(Matrix B) {
 		if (!(this.row == B.row && this.col == B.col))
-			throw new RuntimeException("the matrices dimensions do not add up");
+			throw new RuntimeException("the matrices dimensions do not add up: A = " + this.row + " x " + this.col + ", B = " + B.row + " x " + B.col);
 
 		Matrix C = new Matrix(this.row, this.col);
 		for (int row = 0; row < this.row; row++)
@@ -109,7 +109,7 @@ public class Matrix {
 
 	public Matrix matrixMultiplication(Matrix B) {
 		if (!(this.col == B.row))
-			throw new RuntimeException("the matrices dimensions do not add up: A. col = " + this.col + ", B.row = " + B.row );
+			throw new RuntimeException("the matrices dimensions do not add up: A.col = " + this.col + ", B.row = " + B.row );
 
 		Matrix C = new Matrix(this.row, B.col);
 		for (int row = 0; row < this.row; row++)
