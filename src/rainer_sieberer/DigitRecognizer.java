@@ -30,10 +30,27 @@ public class DigitRecognizer {
 	 *            the data used to train the neural network
 	 * @return true if the initialization was successful
 	 */
-	public boolean init(File csvTrainingData) throws Exception {
+	public boolean init(File csvTrainingData) throws Exception
+	{
+		net = new NeuralNetwork();
+		int[] numberOfNodes = new int[]{784,200,10};
+		List<Function<Double, Double>> activation = new ArrayList<Function<Double, Double>>();
+		activation.add( (Double x) -> 1.0 / (1.0 + Math.exp(-x)) );
+		activation.add( (Double x) -> 1.0 / (1.0 + Math.exp(-x)) );
+		return net.init( csvTrainingData, numberOfNodes, 5, 0.1, activation );
+	}
+
+	/**
+	 * trains the neural network used for digit recogniztion.
+	 *
+	 * @return true iff the training of the neural network was successful.
+	 * @throws Exception
+	 */
+	public boolean train() throws Exception
+	{
+		File csvTrainingData = net.getTrainingFile();
 		List<List<Double>> trainingData = new ArrayList<>();
 		List<Integer> trainingDataSolution = new ArrayList<>();
-		this.net = new NeuralNetwork();
 
 		try (BufferedReader br = new BufferedReader(new FileReader(csvTrainingData))) {
 			
@@ -51,24 +68,7 @@ public class DigitRecognizer {
 			});
 		}
 
-		if (trainingData.size() > 0) {
-			int[] numberOfNodes = new int[]{784,200,10};
-			List<Function<Double, Double>> activation = new ArrayList<Function<Double, Double>>();
-			activation.add( (Double x) -> 1.0 / (1.0 + Math.exp(-x)) );
-			activation.add( (Double x) -> 1.0 / (1.0 + Math.exp(-x)) );
-			return net.init( trainingData, trainingDataSolution, numberOfNodes, 5, 0.1, activation );
-		} else
-			return false;
-	}
-
-	/**
-	 * trains the neural network used for digit recogniztion.
-	 *
-	 * @return true iff the training of the neural network was successful.
-	 * @throws Exception
-	 */
-	public boolean train() throws Exception {
-		return net.train();
+		return net.train(trainingData, trainingDataSolution);
 	}
 
 	/**

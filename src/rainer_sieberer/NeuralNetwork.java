@@ -13,11 +13,13 @@ import java.util.stream.DoubleStream;
 import java.util.Collections;
 
 /**
+ * this is a adaptation of the available code for the assignment 12
  * (initial python implementation: Make Your Own Neural Network, Tariq Rashid)
  * (this code is based on submissions from C.Moesl, A.Schuetz, T.Hilgart, M.Regirt)
  */
 public class NeuralNetwork {
 
+	private File trainingFile;
 	private List<Integer> trainingDataSolution;
 	private List<List<Double>> trainingData;
 	private int numberOfEpochs;
@@ -27,38 +29,19 @@ public class NeuralNetwork {
 	private int[] numberOfNodes;
 	private List<Matrix> weights;
 
-	/**
-	 * Loads the .csv file with the training data or throws an Exception if anything goes wrong;
-	 * returns true iff the initialization completed successfully.
-	 *
-	 * @param csvTrainingData
-	 *            the data used to train the neural network
-	 * @param trainingDataSolution
-	 *            the solutions to the data used to train the neural network
-	 * @param numberOfNodes
-	 *            the number of nodes in each layer, including input and output layer
-	 * @param learningRate
-	 *            the learning rate
-	 * @param activation
-	 *            the list of activation functions, one for each connection between two layers
-	 * @return true if the initialization was successful
-	 */
+	public File getTrainingFile () { return this.trainingFile; }
+
 	public boolean init(
-		List<List<Double>> trainingData, List<Integer> trainingDataSolution,
-		int[] numberOfNodes, int numberOfEpochs,
+		File trainingFile, int[] numberOfNodes, int numberOfEpochs,
 		double learningRate, List<Function<Double, Double>> activation
  	)
 	{
-		this.trainingData = trainingData;
-		this.trainingDataSolution = trainingDataSolution;
+		this.trainingFile = trainingFile;
 		this.numberOfNodes = numberOfNodes;
 		this.numberOfEpochs = numberOfEpochs;
 		this.learningRate = learningRate;
 		this.activation = activation;
 		this.weights = new ArrayList<Matrix>();
-
-		if (trainingData.size() == 0 )
-			return false;
 
 		for ( int i = 0; i < this.numberOfNodes.length - 1; i++ )
 		{
@@ -75,18 +58,23 @@ public class NeuralNetwork {
 	 *
 	 * @param	weights	the new list of weight matrices
 	 */
-	public void changeInitialValues ( List<Matrix> weights )
+	public void changeInitialValues ( int index, Matrix newWeights )
 	{
-		this.weights = weights;
+		if ( index < 0 || index >= this.weights.size() )
+			return;
+		this.weights.set( index, newWeights );
 	}
 
 	/**
-	 * trains the neural network used for digit recogniztion.
+	 * trains the neural network
 	 *
 	 * @return true iff the training of the neural network was successful.
 	 * @throws Exception
 	 */
-	public boolean train() throws Exception {
+	public boolean train( List<List<Double>> trainingData, List<Integer> trainingDataSolution ) throws Exception 
+	{		
+		this.trainingData = trainingData;
+		this.trainingDataSolution = trainingDataSolution;
 		// create the target output values (all 0.01, except the desired label which is 0.99)
 		int amountOfTargets = numberOfNodes[ numberOfNodes.length - 1];
 		double[] targets = DoubleStream.generate(() -> 0.01).limit(amountOfTargets).toArray();
@@ -142,7 +130,7 @@ public class NeuralNetwork {
 						.multByElement( outputs.get( layer + 1  )
 						.applyFuntion( activation.get( layer ) ) )
 						.matrixMultiplication( outputs.get( layer ).transposeMatrix())
-						.scalarMultiplication( learningRate ))   );
+						.scalarMultiplication( learningRate )) );
 		}
 	}
 
@@ -201,6 +189,20 @@ public class NeuralNetwork {
 		Matrix inputs = toMatrix(inputsList);
 		List<Matrix> outputs = feedForward( inputs );
 		return toArray( outputs.get( numberOfNodes.length - 1 ) );
+	}
+
+	public void printInfo ()
+	{
+		System.out.println("net information:");
+
+		System.out.println("training file: " + trainingFile.getName());
+		System.out.println("numberOfEpochs = " + numberOfEpochs);
+		System.out.println("learningRate = " + learningRate);
+
+		for ( int i = 0; i < numberOfNodes.length; i++ )
+		{
+			System.out.println("layer " + i + ": nodes = " + numberOfNodes[i]);
+		}
 	}
 
 	private Matrix toMatrix(double[] data) {

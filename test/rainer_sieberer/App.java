@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * sample code for PS Software Engineering, ws17: starting point for A12
+ * 
  * (initial python implementation: Make Your Own Neural Network, Tariq Rashid)
  * (this code is based on submissions from C.Moesl, A.Schuetz, T.Hilgart, M.Regirt)
  */
