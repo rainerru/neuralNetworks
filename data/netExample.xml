@@ -1,4 +1,7 @@
-<net epochs="5" learningRate="0.1" inputNodes="784" trainingFile="../data/mnist_train_100.csv">
+<net epochs="50" learningRate="0.1" inputNodes="784" trainingFile="../data/mnist_train_100.csv">
+ <layer nodes="300" activationFunction="Sigmoid" initialValues="normal"/>
+ <layer nodes="250" activationFunction="Sigmoid" initialValues="normal"/>
  <layer nodes="200" activationFunction="Sigmoid" initialValues="normal"/>
+ <layer nodes="150" activationFunction="Sigmoid" initialValues="normal"/>
  <layer nodes="10" activationFunction="Sigmoid" initialValues="normal"/>
 </net>

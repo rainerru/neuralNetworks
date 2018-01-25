@@ -18,7 +18,7 @@ public class DigitTester
 	{
 		DigitRecognizer recognizer = new DigitRecognizer(
 			new File("../data/mnist_train_100.csv"),
-			new File("../data/mnist_test_10.csv")
+			new File("../data/netExample.xml")
 		);
 
 		int attemptsOk = 0;
