@@ -95,48 +95,4 @@ public class XMLReader
 		return net;
 	}
 
-/*
-	private static void addListToList ( Element e, ItemList list )
-	{
-		NodeList listOfNodes = e.getChildNodes(); // extract the 'subitems'
-
-		for (int i=0;i<listOfNodes.getLength();i++){
-
-			Node currentNode = listOfNodes.item(i);
-			int type = currentNode.getNodeType();
-
-			if (type == Node.ELEMENT_NODE){
-
-				Element currentElement = (Element) currentNode;
-				if ( currentElement.getTagName().equals("list") )
-					addListToList ( currentElement, list ); // if it is a list, a recursion is triggered
-				else 
-					addElementToList ( currentElement, list ); // is it is a single element, use the other method.
-
-			}
-		}
-	} 
-
-	private static void addElementToList ( Element currentElement, ItemList list )
-	{
-		if ( currentElement.getTagName().equals("book") )
-		{
-			Item newItem = new Book(currentElement.getAttribute("name"),
-				Double.parseDouble(currentElement.getAttribute("price")),
-				Integer.parseInt(currentElement.getAttribute("isbn")));
-			list.add(newItem);
-		} else
-		if ( currentElement.getTagName().equals("cd") )
-		{
-			Item newItem = new Cd(currentElement.getAttribute("name"),
-				Double.parseDouble(currentElement.getAttribute("price")));
-			list.add(newItem);
-		} else
-		{
-			Item newItem = new Item(currentElement.getAttribute("name"),
-				Double.parseDouble(currentElement.getAttribute("price")));
-			list.add(newItem);
-		} 
-	} */
-
 }

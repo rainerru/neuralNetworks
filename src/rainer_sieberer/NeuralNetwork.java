@@ -1,8 +1,6 @@
 package rainer_sieberer;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -141,7 +139,7 @@ public class NeuralNetwork {
 	 *            the input values to be used
 	 * @return	the list of hidden outputs, created by applying weights and the activation functions
 	 */
-	public List<Matrix> feedForward ( Matrix inputs )
+	private List<Matrix> feedForward ( Matrix inputs )
 	{
 		Matrix current = inputs;
 		List<Matrix> outputs = new ArrayList<Matrix>();
@@ -164,7 +162,7 @@ public class NeuralNetwork {
 	 *            the targets used to determine the output error
 	 * @return	the list of hidden errors
 	 */
-	public List<Matrix> backPropagate ( List<Matrix> outputs, Matrix targets )
+	private List<Matrix> backPropagate ( List<Matrix> outputs, Matrix targets )
 	{
 		List<Matrix> errors = new ArrayList<Matrix>();
 		Matrix current = targets.matrixSubstraction( outputs.get( numberOfNodes.length-1 ) );
